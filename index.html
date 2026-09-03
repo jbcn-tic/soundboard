@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soundboard JBCN</title>
+<style>
+  :root {
+    --grana: #7a1b34;
+    --grana-dark: #4a0f20;
+    --groc: #ffc72c;
+    --groc-dark: #d4a015;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--grana-dark), var(--grana) 55%, #2a0a13);
+    color: #fff;
+  }
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 32px;
+  }
+  .logo {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--groc);
+    border: 3px solid var(--groc-dark);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    overflow: hidden;
+  }
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    text-align: center;
+    margin: 0;
+    color: var(--groc);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  button.sound-btn {
+    position: relative;
+    padding: 22px 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--groc);
+    background: rgba(255,255,255,0.08);
+    border: 2px solid var(--groc-dark);
+    border-radius: 14px;
+    cursor: pointer;
+    text-transform: capitalize;
+    transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button.sound-btn:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: var(--groc);
+  }
+  button.sound-btn:active {
+    transform: scale(0.94);
+  }
+  button.sound-btn.playing {
+    background: var(--groc);
+    border-color: var(--groc);
+    color: var(--grana-dark);
+    animation: pulse 0.9s ease-in-out infinite;
+  }
+  .playing-icon {
+    display: none;
+    margin-right: 6px;
+  }
+  button.sound-btn.playing .playing-icon {
+    display: inline;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    opacity: 0.75;
+    color: var(--groc);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="logo">🔊</div>
+  <h1>Soundboard JBCN</h1>
+</header>
+<div class="grid" id="grid"></div>
+
+<footer>Toca un botó tantes vegades com vulguis 🎉</footer>
+
+<script>
+  const logoEl = document.getElementById("logo");
+  const logoImg = new Image();
+  logoImg.onload = () => { logoEl.innerHTML = ""; logoEl.appendChild(logoImg); };
+  logoImg.onerror = () => {};
+  logoImg.src = "logo.png";
+</script>
+
+<script>
+  const sounds = [
+    "2-hours-later.mp3",
+    "aaaaahhh.mp3",
+    "alarma.mp3",
+    "applause.mp3",
+    "applause2.mp3",
+    "faaaah.mp3",
+    "fart.mp3",
+    "horn-dj.mp3",
+    "horn.mp3",
+    "huh.mp3",
+    "indian.mp3",
+    "latigo.mp3",
+    "meow-meow-moew.mp3",
+    "mes-18.mp3",
+    "michael-jackson.mp3",
+    "musica-sexy.mp3",
+    "rellotge.mp3",
+    "sad-music.mp3",
+    "sad-trumpet.mp3",
+    "siuuuu.mp3",
+    "tambors-chiste.mp3",
+    "tambors.mp3",
+    "vine-boon.mp3"
+  ];
+
+  const grid = document.getElementById("grid");
+
+  sounds.forEach(file => {
+    const name = file.replace(/\.mp3$/i, "").replace(/-/g, " ");
+    const audio = new Audio(file);
+
+    const btn = document.createElement("button");
+    btn.className = "sound-btn";
+    btn.innerHTML = `<span class="playing-icon">⏸</span><span>${name}</span>`;
+
+    audio.addEventListener("play", () => btn.classList.add("playing"));
+    audio.addEventListener("pause", () => btn.classList.remove("playing"));
+    audio.addEventListener("ended", () => btn.classList.remove("playing"));
+
+    btn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.currentTime = 0;
+        audio.play();
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    });
+
+    grid.appendChild(btn);
+  });
+</script>
+
+</body>
+</html>
